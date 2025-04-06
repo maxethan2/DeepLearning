@@ -38,6 +38,10 @@ CNN.eval()
 
 classes = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'del', 'nothing', 'space')
 
+# img is 200x200 jpg
+# then transformed to tensor and normalized
+# TODO: go to webapp and create function for taking photos every X seconds and sending them to this script (use setInterval and clearInterval with useEffect)
+
 img = mpimg.imread('F:\DeepLearning\Project\A_test.jpg')
 
 transform = transforms.Compose(
@@ -47,7 +51,7 @@ transform = transforms.Compose(
 tensor_img = transform(img).unsqueeze(0).to(device)
 
 with torch.no_grad():
-    output = CNN(tensor_img)  # Forward pass
+    output = CNN(tensor_img)
 _, predicted = torch.max(output, 1)
 
 print(classes[predicted.item()])
