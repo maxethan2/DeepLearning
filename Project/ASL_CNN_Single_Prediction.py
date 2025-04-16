@@ -4,10 +4,10 @@ import torch.nn.functional as F
 import matplotlib.image as mpimg
 import torchvision
 import torchvision.transforms as transforms
-
+import base64
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model_weights = torch.load('cnn_model.pth', map_location=device)
+model_weights = torch.load('CNN_Model_2.pth', map_location=device)
 
 class CNN(nn.Module):
     def __init__(self):
@@ -38,11 +38,7 @@ CNN.eval()
 
 classes = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'del', 'nothing', 'space')
 
-# img is 200x200 jpg
-# then transformed to tensor and normalized
-# TODO: go to webapp and create function for taking photos every X seconds and sending them to this script (use setInterval and clearInterval with useEffect)
-
-img = mpimg.imread('F:\DeepLearning\Project\A_test.jpg')
+img = mpimg.imread("C:\\Users\\me03h\\Desktop\\DeepLearning\\Project\\A_test.jpg")
 
 transform = transforms.Compose(
     [transforms.ToTensor(),
