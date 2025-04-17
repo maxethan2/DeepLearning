@@ -7,12 +7,19 @@ import torchvision.transforms as transforms
 import base64
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model_weights = torch.load('CNN_Model_2.pth', map_location=device)
+model_weights = torch.load('CNN_Model_6.pth', map_location=device)
+from PIL import Image, ImageFilter
 
+# .point(lambda p: p > 80 and 255)
+class EdgeDetect:
+    def __call__(self, img):
+        img = img.convert('L')
+        img = img.filter(ImageFilter.FIND_EDGES).point(lambda p: p > 35 and 255)
+        return img
 class CNN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, padding=1)
         self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1)
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
@@ -38,12 +45,16 @@ CNN.eval()
 
 classes = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'del', 'nothing', 'space')
 
-img = mpimg.imread("C:\\Users\\me03h\\Desktop\\DeepLearning\\Project\\A_test.jpg")
+# img = mpimg.imread("F:\DeepLearning\Project\A_test.jpg")
+img = Image.open("F:\DeepLearning\Project\A_test.jpg")
 
-transform = transforms.Compose(
-    [transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
+transform = transforms.Compose([
+    # transforms.Resize((128, 128)),
+    EdgeDetect(), # convert images to gray scale and then detect edges
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+    ])
 tensor_img = transform(img).unsqueeze(0).to(device)
 
 with torch.no_grad():
