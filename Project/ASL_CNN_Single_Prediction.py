@@ -7,14 +7,14 @@ import torchvision.transforms as transforms
 import base64
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model_weights = torch.load('CNN_Model_6.pth', map_location=device)
+model_weights = torch.load('CNN_Model_2.pth', map_location=device)
 from PIL import Image, ImageFilter
 
 # .point(lambda p: p > 80 and 255)
 class EdgeDetect:
     def __call__(self, img):
         img = img.convert('L')
-        img = img.filter(ImageFilter.FIND_EDGES).point(lambda p: p > 35 and 255)
+        img = img.filter(ImageFilter.FIND_EDGES).point(lambda p: p > 20 and 255)
         return img
 class CNN(nn.Module):
     def __init__(self):
@@ -50,7 +50,7 @@ img = Image.open("F:\DeepLearning\Project\A_test.jpg")
 
 
 transform = transforms.Compose([
-    # transforms.Resize((128, 128)),
+    transforms.Resize((200, 200)),
     EdgeDetect(), # convert images to gray scale and then detect edges
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,))
